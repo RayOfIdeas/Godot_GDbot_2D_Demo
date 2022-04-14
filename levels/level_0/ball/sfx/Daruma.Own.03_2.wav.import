@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Daruma.Own.03_2.wav-2134715815ce31c2a127dc8b9b5a5533.sample"
+
+[deps]
+
+source_file="res://levels/level_0/ball/sfx/Daruma.Own.03_2.wav"
+dest_files=[ "res://.import/Daruma.Own.03_2.wav-2134715815ce31c2a127dc8b9b5a5533.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

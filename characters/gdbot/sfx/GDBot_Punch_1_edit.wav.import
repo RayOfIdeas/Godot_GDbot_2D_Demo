@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/GDBot_Punch_1_edit.wav-58fa03067fa860960648fe0aa4fe1649.sample"
+
+[deps]
+
+source_file="res://characters/gdbot/sfx/GDBot_Punch_1_edit.wav"
+dest_files=[ "res://.import/GDBot_Punch_1_edit.wav-58fa03067fa860960648fe0aa4fe1649.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

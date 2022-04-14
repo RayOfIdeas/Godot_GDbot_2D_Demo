@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/GDBot_squat_1_edit.wav-e3f5aea1d878fef5a8c5f43d9dd61353.sample"
+
+[deps]
+
+source_file="res://characters/gdbot/sfx/GDBot_squat_1_edit.wav"
+dest_files=[ "res://.import/GDBot_squat_1_edit.wav-e3f5aea1d878fef5a8c5f43d9dd61353.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

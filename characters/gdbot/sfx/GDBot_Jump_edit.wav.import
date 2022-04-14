@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/GDBot_Jump_edit.wav-1806d931dd205cf164a2954dbc201c09.sample"
+
+[deps]
+
+source_file="res://characters/gdbot/sfx/GDBot_Jump_edit.wav"
+dest_files=[ "res://.import/GDBot_Jump_edit.wav-1806d931dd205cf164a2954dbc201c09.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

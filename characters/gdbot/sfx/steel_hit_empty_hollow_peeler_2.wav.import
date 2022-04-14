@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/steel_hit_empty_hollow_peeler_2.wav-504337026c36442c2af6f9fe55310954.sample"
+
+[deps]
+
+source_file="res://characters/gdbot/sfx/steel_hit_empty_hollow_peeler_2.wav"
+dest_files=[ "res://.import/steel_hit_empty_hollow_peeler_2.wav-504337026c36442c2af6f9fe55310954.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
