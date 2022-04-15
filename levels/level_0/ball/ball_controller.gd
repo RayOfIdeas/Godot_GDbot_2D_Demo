@@ -47,9 +47,7 @@ func receive_damage(damage_value:int):
 	if current_mode == Mode.Safe:
 		current_mode = Mode.Lethal
 		light.color = Color.red
-		print("Lethal")
 		
 	elif current_mode == Mode.Lethal:
 		current_mode = Mode.Safe
 		light.color = Color.yellow
-		print("Safe")

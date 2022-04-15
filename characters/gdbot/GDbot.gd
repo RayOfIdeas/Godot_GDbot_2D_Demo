@@ -5,19 +5,19 @@ onready var animation_tree = get_node("animation_tree")
 onready var animation_mode = animation_tree.get("parameters/playback")
 onready var sprites = get_node("sprites")
 onready var sfx_manager = get_node("sfx_manager")
-onready var hand_right_rb = get_node("sprites/Abdomen/Chest/BicepRight/HandRight/hand_right_area")
+onready var hand_right_area = get_node("sprites/Abdomen/Chest/BicepRight/HandRight/hand_right_area")
 
 # Character properties
 var attack_damage_value = 10
 var health = 100 
 
 # Movement consts
-const GRAVITY = 2000.0
-const WALK_SPEED = 45
-const MAX_WALK_SPEED = 450
-const JUMP_SPEED = 80000
-const JUMP_ANIMATION_DELAY = 0.48
-const CAN_JUMP_COOLDOWN = 0.5
+const GRAVITY = 3200.0
+const WALK_SPEED = 55
+const MAX_WALK_SPEED = 600
+const JUMP_SPEED = 110000
+const JUMP_ANIMATION_DELAY = 0.2
+const CAN_JUMP_COOLDOWN = 0.2
 const STAND_BY_ANIMATION_COOLDOWN = 10
 
 # Movement data handlers
@@ -26,13 +26,13 @@ var is_jump_animation_delay = false
 var velocity = Vector2()
 var checking_landing = false
 onready var can_jump_cooldown_current = CAN_JUMP_COOLDOWN
-
-var stand_by_animation_current = 0
-var can_stand_by_animation = true
-
-var is_on_air_valid = true
+var is_on_air_valid = false
 var is_on_air_valid_count = 0
 var is_on_air_valid_count_max = 5
+
+# Animation data handlers
+var stand_by_animation_current = 0
+var can_stand_by_animation = true
 
 # Input data handlers
 var is_pressing_right = false
@@ -45,7 +45,7 @@ var is_pressing_debug = false
 func _ready():
 	animation_tree.active = true
 	enable_hand_right_rb(false)
-	hand_right_rb.connect("body_entered",self,"apply_damage")
+	hand_right_area.connect("body_entered",self,"apply_damage")
 	
 func _process(delta):
 	
@@ -57,7 +57,13 @@ func _process(delta):
 		stand_by_animation_current = 0
 		animation_mode.travel("stand_by")
 	
-#	print(animation_mode.get_current_node())
+	# --- SPRITE'S COLOR TO WHITE ---
+	if sprites.modulate.r < 1:
+		sprites.modulate.r += delta
+	if sprites.modulate.g < 1:
+		sprites.modulate.g += delta
+	if sprites.modulate.b < 1:
+		sprites.modulate.b += delta
 	
 func _physics_process(delta):
 	
@@ -95,16 +101,10 @@ func _physics_process(delta):
 		velocity.y = 1000
 	if is_on_floor() and !checking_landing: 
 		velocity.y = 0
-	
+		
 	# --- JUMP ---
-	if (is_jump_animation_delay): # Delay jump for animation
-		jump_animation_delay_current += delta
-		if (jump_animation_delay_current > JUMP_ANIMATION_DELAY):
-			jump_animation_delay_current = 0
-			is_jump_animation_delay = false
-			velocity.y = -JUMP_SPEED * delta # Jump
 	if is_on_floor(): # When on floor
-		if checking_landing and can_jump_cooldown_current > JUMP_ANIMATION_DELAY + 1: # Landing
+		if checking_landing: # Landing
 			checking_landing = false
 			can_jump_cooldown_current = 0
 			if velocity.x == 0:
@@ -115,7 +115,6 @@ func _physics_process(delta):
 			if can_jump_cooldown_current > CAN_JUMP_COOLDOWN:
 				is_jump_animation_delay = true
 				can_jump_cooldown_current = 0
-				checking_landing = true
 				if velocity.x == 0:
 					animation_mode.travel("jump") # Animation jump
 				else:
@@ -129,25 +128,28 @@ func _physics_process(delta):
 		else :
 			if (animation_mode.get_current_node()!="air_leaning"):
 				animation_mode.travel("air_leaning")
-			
+	if (is_jump_animation_delay): # Delay jump for animation
+		jump_animation_delay_current += delta
+		if (jump_animation_delay_current > JUMP_ANIMATION_DELAY):
+			jump_animation_delay_current = 0
+			is_jump_animation_delay = false
+			velocity.y = -JUMP_SPEED * delta # Jump
+			checking_landing = true
 	can_jump_cooldown_current += delta # Prevent spamming jump
 	
 	# --- FINALIZE MOVE ---
 	move_and_slide(velocity, Vector2(0,-1))
 	
-	# --- ANIMATION ---
-	animation_tree.set("parameters/run/blend/blend_position", abs(velocity.x)/MAX_WALK_SPEED)
-	
 	# --- IDLE & STAND BY ANIMATION ---
-	if is_on_floor() && !checking_landing && velocity.x == 0:
-		if (!is_pressing_click and !is_pressing_right and !is_pressing_left and !is_pressing_up and !is_pressing_debug):
-			if animation_mode.get_current_node() != "idle":
-				can_stand_by_animation = true
-				stand_by_animation_current = 0
-				animation_mode.travel("idle")
-		else:
-			can_stand_by_animation = false
-	
+	if is_on_floor() and !checking_landing and jump_animation_delay_current == 0 and velocity.x == 0:
+		if animation_mode.get_current_node() != "idle":
+			can_stand_by_animation = true
+			stand_by_animation_current = 0
+			animation_mode.travel("idle")
+	else:
+		can_stand_by_animation = false
+
+
 func _unhandled_input(event):
 	# --- CLICK ---
 	if event.is_action_pressed("click"):
@@ -165,7 +167,8 @@ func _unhandled_input(event):
 	# --- RIGHT ---
 	if event.is_action_pressed("right"):
 		is_pressing_right = true
-		animation_mode.travel("run")
+		if is_on_floor():
+			animation_mode.travel("run")
 	elif event.is_action_released("right"):
 		is_pressing_right = false
 		
@@ -183,7 +186,7 @@ func _unhandled_input(event):
 	elif event.is_action_released("up"):
 		is_pressing_up = false
 	
-	if (is_pressing_click and is_pressing_right and is_pressing_left and is_pressing_up):
+	if (is_pressing_click or is_pressing_right or is_pressing_left or is_pressing_up):
 		stand_by_animation_current = 0
 	
 	# --- DEBUG ---
@@ -205,13 +208,11 @@ func attack(name:String):
 		enable_hand_right_rb(true)
 
 func stop_attacking():
-#	hand_right_rb.sleeping = false
 	enable_hand_right_rb(false)
 
 func enable_hand_right_rb(is_enabled:bool):
-#	hand_right_rb.sleeping = is_enabled
-	hand_right_rb.visible = is_enabled
-	hand_right_rb.monitoring = is_enabled
+	hand_right_area.visible = is_enabled
+	hand_right_area.monitoring = is_enabled
 
 func apply_damage(body):
 	if body != self:
@@ -220,7 +221,7 @@ func apply_damage(body):
 	
 func receive_damage(damage_value:int):
 	health -= damage_value
-	print("receive damage: ",damage_value)
+	sprites.modulate = Color(1,0.2,0.2)
 	if checking_landing:
 		animation_mode.travel("damaged_air")
 	else:
@@ -228,4 +229,3 @@ func receive_damage(damage_value:int):
 			animation_mode.travel("damaged")
 		else:
 			animation_mode.travel("damaged_run")
-	
