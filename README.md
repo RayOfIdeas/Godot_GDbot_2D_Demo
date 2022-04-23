@@ -34,6 +34,8 @@ In this demo, the light ball will turn to red after being damaged, causing it to
 ![GDbot & Sophia](README_Files/Demo_GDBot_AnimationTree.png "Animiation's state machine")
 - Haven't been tested as a robust template for making a game with this style
 
+*Some issues above has been addressed in the v0.1.1 release. Hopefully it resolves these bugs.*
+
 
 # 📈 Possible Future Plans
 - Stay tuned for a video discussing this project on my YouTube channel:
